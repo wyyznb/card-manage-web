@@ -5,7 +5,7 @@
       <el-breadcrumb-item>商品列表</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="product-main">
-      <div class="product-main-top">
+      <!-- <div class="product-main-top">
         <div class="product-search">
           <span>产品名称</span>
           <el-input
@@ -23,10 +23,10 @@
           <el-button type="primary">查询</el-button>
           <el-button>重置</el-button>
         </div>
-      </div>
-      <div class="add-product" @click="addProduct">
-        <el-button type="primary" plain> + 添加商品</el-button>
-      </div>
+      </div> -->
+      <!-- <div class="add-product" @click="addProduct">
+        <el-button type="primary" plain> + 编辑商品</el-button>
+      </div> -->
       <!-- 表格+分页公共组件调用 -->
       <custom-table v-loading="loading" :tableData="tableDataSource" :columns="columns" :total="total"
         rowKey='id' :pageSizes="[20, 40, 60, 80, 100]" v-model:page="pagination.pageIndex"
@@ -39,6 +39,7 @@
           {{ row.status ? '上架中' : '已下架' }}
         </template>
         <template v-slot:operation="{ row }">
+          <el-button @click="addProduct" type="primary" text>编辑</el-button>
           <el-button type="primary" text>上架</el-button>
           <el-button type="primary" text>下架</el-button>
           <el-button type="primary" text>专属链接</el-button>
@@ -68,51 +69,82 @@ const loading = ref<boolean>(false)
 const total = ref<number>(4)
 const showPerDialogVisible = ref<boolean>(false)
 const perForm = ref<any>({
-  id: '',
+  bianma: '',
   name: '',
   imageUrl: '',
   age: '',
   plat: '',
-  productId: '',
+  productTag: '',
   productName: ''
 })
 
 // 列表列头设置
 const columns = [
   {
+    prop: 'bianma',
+    label: '商品编码（接口请求回来的id）',
+    width: 150
+  },
+  {
     prop: 'imageUrl',
-    label: '主图',
+    label: '头图',
     type: 'slot',
     slotType: "imageUrl",
     width: 100
   },
   {
-    prop: 'id',
-    label: '商品本站id',
-    width: 120
-  },
-  {
     prop: 'name',
-    label: '自有产品名称(18-65周岁)',
+    label: '产品名称',
     width: 300
   },
+  {
+    prop: 'detail',
+    label: '详情',
+    width: 120
+  },
+  
   {
     prop: 'plat',
     label: '所属平台',
   },
   {
-    prop: 'productId',
-    label: '所属平台的商品id',
+    prop: 'productTag',
+    label: '产品亮点',
     width: 200
   },
   {
     prop: 'productName',
-    label: '所属平台的产品名称',
+    label: '商品备注',
     width: 360
   },
   {
+    prop: 'oldRent',
+    label: '原月租',
+    width: 100
+  },
+  {
+    prop: 'newRent',
+    label: '优惠后月租',
+    width: 100
+  },
+  {
+    prop: 'tongyongliuliang',
+    label: '通用流量',
+    width: 100
+  },
+  {
+    prop: 'dingxiangliuliang',
+    label: '定向流量',
+    width: 100
+  },
+  {
+    prop: 'tonghuashu',
+    label: '通话分钟数',
+    width: 100
+  },
+  {
     prop: 'status',
-    label: '自有平台商品状态',
+    label: '上架状态',
     type: 'slot',
     slotType: "status"
   },
@@ -126,54 +158,36 @@ const columns = [
 ]
 
 const tableDataSource = ref<any>([{
+  bianma: '77777554545',
   id: 1,
   imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx3.sinaimg.cn/large/0060M1TRly1i1bxz89gh1j30ft0kwti6.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  productId: 12,
-  productName: '大陆国行，支持联通移动大陆国行，支持联通移动',
+  name: 'N电信星花卡29元185G长期套餐',
+  detail: '详情是编辑器添加的多图片，这里无需显示',
+  plat: '号易',
+  productTag: '5G畅享速率',
+  productName: '29元185G+100分钟发货率高，政策全网最优，年龄：19-55周岁',
+  oldRent: 29,
+  newRent: 19,
+  tongyongliuliang: 155,
+  dingxiangliuliang: 30,
+  tonghuashu: 100,
   status: 1
 },{
+  bianma: '商品编码是从接口取过来的',
   id: 2,
   imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  productId: 24,
-  productName: '大陆国行，支持联通移动大陆国行，支持联通移动',
+  name: '头图和产品名称都是可以编辑的',
+  detail: '详情是编辑器添加的多图片，这里无需显示',
+  plat: '号易',
+  productTag: '全国高速流量',
+  productName: '29元185G+100分钟发货率高，政策全网最优，年龄：19-55周岁',
+  oldRent: 39,
+  newRent: 29,
+  tongyongliuliang: 205,
+  dingxiangliuliang: 30,
+  tonghuashu: 0,
   status: 0
-},{
-  id: 3,
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '联通',
-  productId: 34,
-  productName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  status: 0
-},{
-  id: 4,
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  productId: 89,
-  productName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  status: 1
-},{
-  id: 4,
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  productId: 89,
-  productName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  status: 1
-},{
-  id: 4,
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  productId: 89,
-  productName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  status: 1
-}])
+}]);
 
 
 // 产品名称搜索

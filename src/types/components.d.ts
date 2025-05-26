@@ -7,9 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    copy: typeof import('../components/Header.vue')['default']
     CustomTable: typeof import('./../components/CustomTable.vue')['default']
-    Header: typeof import('./../components/Header.vue')['default']
     HeaderPage: typeof import('./../components/HeaderPage.vue')['default']
     LeftMenu: typeof import('./../components/LeftMenu.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

@@ -17,10 +17,10 @@
             </div>
             <img :src="getImageUrl(item.icon)">
           </div>
-          <div class="order-item-time">
+          <!-- <div class="order-item-time">
             <span>更新至 {{ item.date }}</span>
             <el-icon :size="12"><ArrowRight /></el-icon>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="statistics-list">
@@ -31,20 +31,20 @@
           </div>
           <div class="order-status-lst">
             <div class="item">
-              未处理订单：
-              <span>{{ orderStatisticsInfo.untreatedOrder }} 份</span>
-            </div>
-            <div class="item">
               待发货订单：
-              <span>{{ orderStatisticsInfo.pendOrder }} 份</span>
+              <span>{{ orderStatisticsInfo.untreatedOrder }} 个</span>
             </div>
             <div class="item">
-              已成交订单：
-              <span>{{ orderStatisticsInfo.dealOrder }} 份</span>
+              已发货订单：
+              <span>{{ orderStatisticsInfo.pendOrder }} 个</span>
             </div>
             <div class="item">
-              交易失败：
-              <span>{{ orderStatisticsInfo.dailFail }} 份</span>
+              已激活订单：
+              <span>{{ orderStatisticsInfo.dealOrder }} 个</span>
+            </div>
+            <div class="item">
+              失败订单：
+              <span>{{ orderStatisticsInfo.dailFail }} 个</span>
             </div>
           </div>
         </div>
@@ -56,15 +56,15 @@
           <div class="order-status-lst">
             <div class="item">
               商品总数：
-              <span>{{ productStatisticsInfo.total }} 份</span>
+              <span>{{ productStatisticsInfo.total }} 个</span>
             </div>
             <div class="item">
               上架商品：
-              <span>{{ productStatisticsInfo.proundProduct }} 份</span>
+              <span>{{ productStatisticsInfo.proundProduct }} 个</span>
             </div>
             <div class="item">
               下架商品：
-              <span>{{ productStatisticsInfo.removeProduct }} 份</span>
+              <span>{{ productStatisticsInfo.removeProduct }} 个</span>
             </div>
           </div>
         </div>
@@ -91,7 +91,7 @@ const orderList = ref<any[]>([
   },
   {
     id: 3,
-    name: '今日订单量',
+    name: '总订单量',
     value: 5635,
     icon: 'total_order_icon',
     date: '2025-05-28'

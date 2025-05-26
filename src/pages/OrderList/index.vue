@@ -37,6 +37,9 @@
         <template v-slot:numberStatus="{ row }">
           {{ row.status ? '激活' : '办理成功' }}
         </template>
+        <template v-slot:operation="{ row }">
+          <el-button type="primary" text>查看</el-button>
+        </template>
       </custom-table>
     </div>
   </div>
@@ -60,18 +63,19 @@ const columns = [
     label: '自有平台订单号',
   },
   {
+    prop: 'orderId',
+    label: '外部订单号',
+  },
+  {
     prop: 'name',
-    label: '自有平台商品名称',
+    label: '商品名称',
     width: 200
   },
   {
     prop: 'plat',
     label: '所属平台',
   },
-  {
-    prop: 'orderId',
-    label: '所属平台订单号',
-  },
+  
   {
     prop: 'status',
     label: '推送状态',
@@ -83,105 +87,85 @@ const columns = [
     label: '用户申请姓名',
   },
   {
+    prop: 'idCard',
+    label: '身份证号',
+  },
+  {
     prop: 'phoneNum',
     label: '手机号'
   },
   {
-    prop: 'name',
-    label: '快递名字'
-  },
-  {
-    prop: 'id',
-    label: '快递单号',
+    prop: 'address',
+    label: '申请地址'
   },
   {
     prop: 'status',
-    label: '号码状态',
+    label: '订单状态',
     type: 'slot',
     slotType: "numberStatus"
+  },
+  {
+    prop: 'failMark',
+    label: '失败原因'
+  },
+  {
+    prop: 'expressName',
+    label: '快递名字'
+  },
+  {
+    prop: 'expressId',
+    label: '快递单号',
   },
   {
     prop: 'phoneNum',
     label: '下单时间'
   },
   {
-    prop: 'orderName',
+    prop: 'orderTime',
     label: '订单备注'
+  },
+  {
+    width: 100,
+    type: 'slot',
+    slotType: 'options',
+    label: "操作按钮",
+    fixed: 'right',
   },
 ]
 
 const tableDataSource = ref<any>([{
-  id: '4235432gqewfdsg',
+  id: 'KA20251545515151',
   imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx3.sinaimg.cn/large/0060M1TRly1i1bxz89gh1j30ft0kwti6.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 12,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
+  name: 'N电信星花卡29元185G长期套餐',
+  plat: '号易',
+  orderId: 'H2025051801352810637',
+  orderName: '张三丰',
   phoneNum: 15102312312,
-  status: 1
+  status: 1,
+  idCard: '411422198823564585',
+  phoneNum: '13888888888',
+  address: '河南省郑州市金水区文化旅瀚海北金22号103',
+  expressName: '顺丰',
+  expressId: 'SF464418922955974',
+  orderTime: '2025-5-26 22:32:21',
+  failMark: '[待处理][已提运营商][已发货]',
+
 },{
-  id: '423543224354325',
+  id: 'KA20251545515151',
   imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 24,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 0
-},{
-  id: '4235432g54654',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '联通',
-  orderId: 34,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
+  name: 'N电信星花卡29元185G长期套餐',
+  plat: '号易',
+  orderId: 'H2025041123351393038',
+  orderName: '张无忌',
   phoneNum: 15102312312,
-  status: 0
-},{
-  id: '456546gfdsgqwe',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 89,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 1
-},{
-  id: '456546gfdsgqwe',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 89,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 1
-},{
-  id: '456546gfdsgqwe',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 89,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 1
-},{
-  id: '456546gfdsgqwe',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 89,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 1
-},{
-  id: '456546gfdsgqwe',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 89,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 1
+  status: 0,
+  idCard: '411422198823564585',
+  phoneNum: '13888888888',
+  address: '河南省郑州市金水区文化旅瀚海北金22号103',
+  expressName: 'EMS',
+  expressId: '1343209403623',
+  orderTime: '2025-5-26 22:32:21',
+  failMark: '[待处理][已提运营商][前置验证:三要素检测不一致 ，请更换真实信息或联系电话重新下单，或提供给平台三证之后重新审核发货 ]',
 }])
 
 const orderList = ref<any[]>([{

@@ -5,23 +5,32 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       :destroy-on-close="true"
-      title="添加商品"
+      title="编辑商品"
       width="700"
       align-center
       @close="handleClose"
     >
       <el-form size="large" :inline="true" ref="perFormRef" :model="perForm">
         <el-form-item 
-          label="商品本站id："
+          label="商品编码："
           prop="id"
           :rules="[
-            { required: true, message: '请输入商品本站id', trigger: 'blur' }
+            { required: true, message: '本id编码不可修改', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.id"  placeholder="请输入商品本站id" />
+          <el-input v-model="perForm.id"  placeholder="本id编码不可修改" />
         </el-form-item>
         <el-form-item 
-          label="自有产品名称："
+          label="头图："
+          prop="imageUrl"
+          :rules="[
+            { required: true, message: '请输入头图url地址', trigger: 'blur' }
+          ]"
+        >
+          <el-input v-model="perForm.name"  placeholder="请输入头图url地址" />
+        </el-form-item>
+        <el-form-item 
+          label="产品名称："
           prop="name"
           :rules="[
             { required: true, message: '请输入自有产品名称', trigger: 'blur' }
@@ -30,13 +39,13 @@
           <el-input v-model="perForm.name"  placeholder="请输入自有产品名称" />
         </el-form-item>
         <el-form-item 
-          label="申请年龄："
-          prop="age"
+          label="商品详情："
+          prop="detail"
           :rules="[
-            { required: true, message: '请输入年龄', trigger: 'blur' }
+            { required: true, message: '请输入详情图片地址', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.age"  placeholder="请输入年龄" />
+          <el-input type="textarea" v-model="perForm.name"  placeholder="请输入详情图片地址" />
         </el-form-item>
         <el-form-item 
           label="所属平台："
@@ -59,22 +68,67 @@
           </el-select>
         </el-form-item>
         <el-form-item 
-          label="所属平台的商品id："
-          prop="productId"
+          label="产品亮点："
+          prop="productTag"
           :rules="[
-            { required: true, message: '请输入所属平台的商品id', trigger: 'blur' }
+            { required: true, message: '请输入产品亮点', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.productId"  placeholder="请输入所属平台的商品id" />
+          <el-input v-model="perForm.age"  placeholder="请输入产品亮点" />
         </el-form-item>
         <el-form-item 
-          label="所属平台的产品名称："
+          label="商品备注："
           prop="productName"
           :rules="[
-            { required: true, message: '请输入所属平台的产品名称', trigger: 'blur' }
+            { required: true, message: '请输入商品备注', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.productName"  placeholder="请输入所属平台的产品名称" />
+          <el-input v-model="perForm.name"  placeholder="请输入商品备注" />
+        </el-form-item>
+        <el-form-item 
+          label="原月租："
+          prop="oldRent"
+          :rules="[
+            { required: true, message: '请输入原月租', trigger: 'blur' }
+          ]"
+        >
+          <el-input v-model="perForm.productId"  placeholder="请输入原月租" />
+        </el-form-item>
+        <el-form-item 
+          label="优惠后月租："
+          prop="newRent"
+          :rules="[
+            { required: true, message: '请输入优惠后月租', trigger: 'blur' }
+          ]"
+        >
+          <el-input v-model="perForm.productId"  placeholder="请输入优惠后月租" />
+        </el-form-item>
+        <el-form-item 
+          label="通用流量："
+          prop="tongyongliuliang"
+          :rules="[
+            { required: true, message: '请输入通用流量数', trigger: 'blur' }
+          ]"
+        >
+          <el-input v-model="perForm.productId"  placeholder="请输入通用流量数" />
+        </el-form-item>
+        <el-form-item 
+          label="定向流量数："
+          prop="dingxiangliuliang"
+          :rules="[
+            { required: true, message: '请输入定向流量数', trigger: 'blur' }
+          ]"
+        >
+          <el-input v-model="perForm.productId"  placeholder="请输入定向流量数" />
+        </el-form-item>
+        <el-form-item 
+          label="通话分钟数："
+          prop="tonghuashu"
+          :rules="[
+            { required: true, message: '请输入通话分钟数', trigger: 'blur' }
+          ]"
+        >
+          <el-input v-model="perForm.productId"  placeholder="请输入通话分钟数" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -99,13 +153,10 @@
   })
   const platList = ref<any[]>([{
     id: 1,
-    name: '移动'
+    name: '号易'
   },{
     id: 2,
-    name: '联通'
-  },{
-    id: 3,
-    name: '电信'
+    name: '国古'
   }])
 
   // 关闭弹窗，重置数据

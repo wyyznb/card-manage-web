@@ -7,7 +7,7 @@
     <div class="plat-main">
       <div class="plat-main-top">
         <div class="add-plat" @click="addPlat">
-          <el-button type="primary" plain> + 平台按钮</el-button>
+          <el-button type="primary" plain> + 添加平台</el-button>
         </div>
       </div>
       <!-- 表格+分页公共组件调用 -->
@@ -50,82 +50,28 @@ const columns = [
   },
   {
     prop: 'id',
-    label: '自有平台id',
+    label: 'id',
   }
 ]
 
 const tableDataSource = ref<any>([{
-  id: '4235432gqewfdsg',
+  id: '1',
   imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx3.sinaimg.cn/large/0060M1TRly1i1bxz89gh1j30ft0kwti6.jpg',
-  name: '大陆国行，支持联通移动',
+  name: '号易',
   plat: '移动',
   orderId: 12,
   orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
   phoneNum: 15102312312,
   status: 1
 },{
-  id: '423543224354325',
+  id: '这个id是我们自己站的id，显示不显示均可',
   imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
+  name: '对接的平台名字，目前只有一个平台',
   plat: '移动',
   orderId: 24,
   orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
   phoneNum: 15102312341,
   status: 0
-},{
-  id: '4235432g54654',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '联通',
-  orderId: 34,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312312,
-  status: 0
-},{
-  id: '456546gfdsgqwe',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 89,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 1
-},{
-  id: '456546gfdsgqwe',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 89,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 1
-},{
-  id: '456546gfdsgqwe',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 89,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 1
-},{
-  id: '456546gfdsgqwe',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 89,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 1
-},{
-  id: '456546gfdsgqwe',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '大陆国行，支持联通移动',
-  plat: '移动',
-  orderId: 89,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 1
 }])
 
 // 添加平台名称
