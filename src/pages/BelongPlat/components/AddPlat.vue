@@ -13,24 +13,27 @@
        <el-form size="large" :inline="true" ref="perFormRef" :model="perForm">
           <el-form-item 
             label="平台名称："
-            prop="name"
+            prop="title"
             :rules="[
               { required: true, message: '请输入平台名称', trigger: 'blur' }
             ]"
           >
-            <el-input v-model="perForm.name"  placeholder="请输入平台名称" />
+            <el-input v-model="perForm.title"  placeholder="请输入平台名称" />
           </el-form-item>
         </el-form>
         <template #footer>
           <div>
             <el-button @click="handleClose">取消</el-button>
-            <el-button type="primary" @click="submit">完成</el-button>
+            <el-button type="primary" @click="addPlatform">完成</el-button>
           </div>
         </template>
     </el-dialog>
   </template>
   <script lang="ts" setup>
-  const emit = defineEmits(['update:visible'])
+  import apis from '@/api'
+  import { myMessage } from '@/utils/resetMessage'
+
+  const emit = defineEmits(['update:visible', 'confirmUser'])
   const props = defineProps({
     visible:{
       type: Boolean,
@@ -41,15 +44,31 @@
       default: {}
     }
   })
+  const perFormRef = ref<any>()
+
   // 关闭弹窗，重置数据
   const handleClose = () => {
     emit('update:visible', false)
+    perFormRef.value.resetFields()
   }
 
-  // 完成
-  const submit = () => {
-    emit('update:visible', false)
+  // 添加平台
+  const addPlatform = async () => {
+    try {
+      const { code, msg } = await apis.platformSaveApi({
+        id: 0,
+        title: props.perForm.title
+      })
+      if (!code) {
+        myMessage({message: msg, type:'success'})
+        handleClose()
+        emit('confirmUser')
+      }
+    } catch (error: any) {
+      throw new Error(error)
+    }
   }
+
   </script>
   <style scoped lang="scss">
  .plat-manage{

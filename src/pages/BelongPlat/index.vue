@@ -12,8 +12,8 @@
       </div>
       <!-- 表格+分页公共组件调用 -->
       <custom-table v-loading="loading" :tableData="tableDataSource" :columns="columns" :total="total"
-        rowKey='id' :pageSizes="[20, 40, 60, 80, 100]" v-model:page="pagination.pageIndex"
-        v-model:size="pagination.pageSize" emptyText="抱歉，未查询到您搜索的信息"
+        rowKey='id' :pageSizes="[10, 20, 30, 40, 50]" v-model:page="pagination.page"
+        v-model:size="pagination.limit" emptyText="抱歉，未查询到您搜索的信息"
         @pagination="getTableDataList">
       </custom-table>
     </div>
@@ -21,30 +21,32 @@
     <AddPlat
       v-model:visible="showPerDialogVisible"
       :perForm="perForm"
+      @confirmUser="confirmUser"
     />
   </div>
 </template>
 <script setup lang="ts">
-import AddPlat from './components/AddPlat.vue' 
+import AddPlat from './components/AddPlat.vue'
+import apis from '@/api'
 
 const showPerDialogVisible = ref<boolean>(false)
 const perForm = ref<any>({
-  name: '',
+  title: '',
 })
 interface Pagination {
-  pageIndex: number
-  pageSize: number
+  page: number
+  limit: number
 }
 const pagination = reactive<Pagination>({
-  pageIndex: 1,
-  pageSize: 20
+  page: 1,
+  limit: 10
 })
 const loading = ref<boolean>(false)
-const total = ref<number>(4)
+const total = ref<number>(0)
 // 列表列头设置
 const columns = [
   {
-    prop: 'name',
+    prop: 'title',
     label: '平台名称',
     width: 400
   },
@@ -54,35 +56,38 @@ const columns = [
   }
 ]
 
-const tableDataSource = ref<any>([{
-  id: '1',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx3.sinaimg.cn/large/0060M1TRly1i1bxz89gh1j30ft0kwti6.jpg',
-  name: '号易',
-  plat: '移动',
-  orderId: 12,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312312,
-  status: 1
-},{
-  id: '这个id是我们自己站的id，显示不显示均可',
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '对接的平台名字，目前只有一个平台',
-  plat: '移动',
-  orderId: 24,
-  orderName: '大陆国行，支持联通移动大陆国行，支持联通移动',
-  phoneNum: 15102312341,
-  status: 0
-}])
+const tableDataSource = ref<any>([])
 
 // 添加平台名称
 const addPlat = () => {
   showPerDialogVisible.value = true
 }
 
-// 列表接口方法
-const getTableDataList = () => {
-
+// 所属平台列表
+const getTableDataList = async () => {
+  loading.value = true
+  try {
+    const { code, data = {} } = await apis.platformApi(pagination)
+    loading.value = false
+    if (!code) {
+      total.value = data?.count || 0
+      tableDataSource.value = data?.list || []
+    }
+  } catch (error: any) {
+    loading.value = false
+    throw new Error(error)
+  }
 }
+
+// 添加平台成功后执行
+const confirmUser = () => {
+  pagination.page = 1
+  getTableDataList()
+}
+
+onMounted(() => {
+  getTableDataList()
+})
 
 </script>
 <style lang="scss" scoped>

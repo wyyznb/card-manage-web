@@ -32,19 +32,19 @@
           <div class="order-status-lst">
             <div class="item">
               待发货订单：
-              <span>{{ orderStatisticsInfo.untreatedOrder }} 个</span>
+              <span>{{ orderStatisticsInfo.pendingShipmentCount || 0 }} 个</span>
             </div>
             <div class="item">
               已发货订单：
-              <span>{{ orderStatisticsInfo.pendOrder }} 个</span>
+              <span>{{ orderStatisticsInfo.alreadyShippedCount || 0 }} 个</span>
             </div>
             <div class="item">
               已激活订单：
-              <span>{{ orderStatisticsInfo.dealOrder }} 个</span>
+              <span>{{ orderStatisticsInfo.activeCount || 0 }} 个</span>
             </div>
             <div class="item">
               失败订单：
-              <span>{{ orderStatisticsInfo.dailFail }} 个</span>
+              <span>{{ orderStatisticsInfo.failCount || 0 }} 个</span>
             </div>
           </div>
         </div>
@@ -56,15 +56,15 @@
           <div class="order-status-lst">
             <div class="item">
               商品总数：
-              <span>{{ productStatisticsInfo.total }} 个</span>
+              <span>{{ productStatisticsInfo.allCount || 0 }} 个</span>
             </div>
             <div class="item">
               上架商品：
-              <span>{{ productStatisticsInfo.proundProduct }} 个</span>
+              <span>{{ productStatisticsInfo.alreadyListedCount || 0 }} 个</span>
             </div>
             <div class="item">
               下架商品：
-              <span>{{ productStatisticsInfo.removeProduct }} 个</span>
+              <span>{{ productStatisticsInfo.removedCount || 0 }} 个</span>
             </div>
           </div>
         </div>
@@ -73,26 +73,30 @@
   </div>
 </template>
 <script setup lang="ts">
+import apis from '@/api'
 //订单列表
 const orderList = ref<any[]>([
   {
     id: 1,
+    key: 'orderTodayCount',
     name: '今日订单量',
-    value: 12345,
+    value: 0,
     icon: 'today_order_icon',
     date: '2025-05-28'
   },
   {
     id: 2,
+    key: 'orderYesterdayCount',
     name: '昨日订单量',
-    value: 3456,
+    value: 0,
     icon: 'yestoday_order_icon',
     date: '2025-05-27'
   },
   {
     id: 3,
+    key: 'orderAllCount',
     name: '总订单量',
-    value: 5635,
+    value: 0,
     icon: 'total_order_icon',
     date: '2025-05-28'
 }])
@@ -100,25 +104,41 @@ const orderList = ref<any[]>([
 // 订单统计信息
 const orderStatisticsInfo = ref<any>({
   name: '订单统计信息',
-  untreatedOrder: 10,
-  pendOrder: 20,
-  dealOrder: 30,
-  dailFail: 100,
   icon: 'order_statistics_icon'
 })
 
 // 商品统计信息
 const productStatisticsInfo = ref<any>({
   name: '商品统计信息',
-  total: 100,
-  groundProduct: 90,
-  removeProduct: 10,
   icon: 'product_statistics_icon'
 })
 
 const getImageUrl = (fileName: string) => {
   return new URL(`../../assets/images/${fileName}.jpg`, import.meta.url).href
 }
+
+// 统计
+const queryHome = async () => {
+  const { code, data = {} } = await apis.homeApi({})
+  if (!code) {
+    orderList.value.forEach((item: any) => {
+      item.value = data?.[item.key] || 0
+    })
+    orderStatisticsInfo.value = {
+      ...data.order,
+      ...orderStatisticsInfo.value
+    }
+    productStatisticsInfo.value = {
+      ...data.goods,
+      ...productStatisticsInfo.value
+    }
+  }
+}
+
+onMounted(() => {
+  queryHome()
+})
+
 </script>
 <style lang="scss" scoped>
 .index-main{

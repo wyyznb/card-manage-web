@@ -6,22 +6,32 @@
         <el-form size="large" :inline="true" ref="loginFormRef" :model="loginForm">
           <el-form-item 
             label="用户名："
-            prop="userName"
+            prop="account"
             :rules="[
               { required: true, message: '请输入用户名', trigger: 'blur' }
             ]"
           >
-            <el-input v-model="loginForm.userName" placeholder="请输入用户名" />
+            <el-input v-model="loginForm.account" placeholder="请输入用户名" />
           </el-form-item>
-          <el-form-item 
+          <el-form-item
             label="密码："
-            prop="userPassWord"
-            type="password"
+            prop="password"
             :rules="[
               { required: true, message: '请输入密码', trigger: 'blur' }
             ]"
           >
-            <el-input v-model="loginForm.userPassWord" placeholder="请输入密码" />
+            <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" />
+          </el-form-item>
+          <el-form-item
+            class="verify"
+            label="验证码："
+            prop="captcha"
+            :rules="[
+              { required: true, message: '请输入验证码', trigger: 'blur' }
+            ]"
+          >
+            <el-input v-model="loginForm.captcha" placeholder="请输入验证码" />
+            <img :src="captchaImg" @click="queryVerify" />
           </el-form-item>
         </el-form>
         <div class="login-submit" @click="handleSubmit(loginFormRef)">
@@ -34,25 +44,48 @@
 
 <script setup lang="ts">
 import type { FormInstance } from 'element-plus'
+import { myMessage } from '@/utils/resetMessage'
+import apis from '@/api'
 
 const loginFormRef = ref()
 const loginForm: any = reactive({
-  userName: '',
-  userPassWord: ''
+  account: '',
+  password: '',
+  captcha: ''
 })
+const captchaImg = ref<any>('')
 const router = useRouter()
+
+// 获取验证码
+const queryVerify = async () => {
+  const { data } = await apis.verifyApi({})
+  captchaImg.value = data.img || ''
+}
 
 // 登录
 const handleSubmit = (formEl: FormInstance | undefined) => {
   if(!formEl) return
-  formEl.validate((valid: any) => {
+  formEl.validate(async (valid: any) => {
     if (valid) {
-      router.push({
-        path: '/home'
-      })
+      const { code, data } = await apis.loginApi(loginForm)
+      if (!code) {
+        myMessage({message: '登录成功', type:'success'})
+        localStorage.setItem('token', data.token)
+        setTimeout(() => {
+          router.push({
+            path: '/home'
+          })
+        }, 300)
+      } else {
+        queryVerify()
+      }
     }
   })
 }
+
+onMounted(() => {
+  queryVerify()
+})
 </script>
 <style lang="scss" scoped>
 .login-container{
@@ -83,6 +116,19 @@ const handleSubmit = (formEl: FormInstance | undefined) => {
         .el-form-item__label{
           width: 80px;
           text-align: right;
+        }
+      }
+      .verify{
+        :deep(.el-form-item__content){
+          display: flex;
+          gap: 0 15px;
+          .el-input{
+            width: 150px;
+          }
+          &>img{
+            width: 100px;
+            height: 40px;
+          }
         }
       }
     }

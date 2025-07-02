@@ -13,49 +13,49 @@
       <el-form size="large" :inline="true" ref="perFormRef" :model="perForm">
         <el-form-item 
           label="商品编码："
-          prop="id"
+          prop="code"
           :rules="[
-            { required: true, message: '本id编码不可修改', trigger: 'blur' }
+            { required: true, message: '请输入商品编码', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.id"  placeholder="本id编码不可修改" />
+          <el-input v-model="perForm.code" disabled />
         </el-form-item>
         <el-form-item 
           label="头图："
-          prop="imageUrl"
+          prop="title_picture"
           :rules="[
             { required: true, message: '请输入头图url地址', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.name"  placeholder="请输入头图url地址" />
+          <el-input v-model="perForm.title_picture"  placeholder="请输入头图url地址" />
         </el-form-item>
         <el-form-item 
           label="产品名称："
-          prop="name"
+          prop="goods_name"
           :rules="[
             { required: true, message: '请输入自有产品名称', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.name"  placeholder="请输入自有产品名称" />
+          <el-input v-model="perForm.goods_name"  placeholder="请输入自有产品名称" />
         </el-form-item>
         <el-form-item 
           label="商品详情："
-          prop="detail"
+          prop="product_details"
           :rules="[
             { required: true, message: '请输入详情图片地址', trigger: 'blur' }
           ]"
         >
-          <el-input type="textarea" v-model="perForm.name"  placeholder="请输入详情图片地址" />
+          <el-input type="textarea" v-model="perForm.product_details"  placeholder="请输入详情图片地址" />
         </el-form-item>
         <el-form-item 
           label="所属平台："
-          prop="plat"
+          prop="platform"
           :rules="[
             { required: true, message: '请选择所属平台', trigger: 'change' }
           ]"
         >
             <el-select
-              v-model="perForm.plat"
+              v-model="perForm.platform"
               placeholder="请选择"
               @change="searchTable"
             >   
@@ -63,84 +63,87 @@
                 v-for="item in platList"
                 :key="item.id"
                 :label="item.name"
-                :value="item.id"
+                :value="item.name"
               />
           </el-select>
         </el-form-item>
         <el-form-item 
           label="产品亮点："
-          prop="productTag"
+          prop="high_light"
           :rules="[
             { required: true, message: '请输入产品亮点', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.age"  placeholder="请输入产品亮点" />
+          <el-input v-model="perForm.high_light"  placeholder="请输入产品亮点" />
         </el-form-item>
         <el-form-item 
           label="商品备注："
-          prop="productName"
+          prop="point"
           :rules="[
             { required: true, message: '请输入商品备注', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.name"  placeholder="请输入商品备注" />
+          <el-input v-model="perForm.point"  placeholder="请输入商品备注" />
         </el-form-item>
         <el-form-item 
           label="原月租："
-          prop="oldRent"
+          prop="yuanyuezu"
           :rules="[
             { required: true, message: '请输入原月租', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.productId"  placeholder="请输入原月租" />
+          <el-input v-model="perForm.yuanyuezu"  placeholder="请输入原月租" />
         </el-form-item>
         <el-form-item 
           label="优惠后月租："
-          prop="newRent"
+          prop="youhuiyuezu"
           :rules="[
             { required: true, message: '请输入优惠后月租', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.productId"  placeholder="请输入优惠后月租" />
+          <el-input v-model="perForm.youhuiyuezu"  placeholder="请输入优惠后月租" />
         </el-form-item>
         <el-form-item 
           label="通用流量："
-          prop="tongyongliuliang"
+          prop="tongyong"
           :rules="[
             { required: true, message: '请输入通用流量数', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.productId"  placeholder="请输入通用流量数" />
+          <el-input v-model="perForm.tongyong"  placeholder="请输入通用流量数" />
         </el-form-item>
         <el-form-item 
           label="定向流量数："
-          prop="dingxiangliuliang"
+          prop="dingxiang"
           :rules="[
             { required: true, message: '请输入定向流量数', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.productId"  placeholder="请输入定向流量数" />
+          <el-input v-model="perForm.dingxiang"  placeholder="请输入定向流量数" />
         </el-form-item>
         <el-form-item 
           label="通话分钟数："
-          prop="tonghuashu"
+          prop="fenzhong"
           :rules="[
             { required: true, message: '请输入通话分钟数', trigger: 'blur' }
           ]"
         >
-          <el-input v-model="perForm.productId"  placeholder="请输入通话分钟数" />
+          <el-input v-model="perForm.fenzhong"  placeholder="请输入通话分钟数" />
         </el-form-item>
       </el-form>
       <template #footer>
         <div>
           <el-button @click="handleClose">取消</el-button>
-          <el-button type="primary" @click="submit">完成</el-button>
+          <el-button type="primary" @click="handleGoodsSave" :loading="loading">完成</el-button>
         </div>
       </template>
     </el-dialog>
   </template>
   <script lang="ts" setup>
-  const emit = defineEmits(['update:visible'])
+  import apis from '@/api'
+  import { myMessage } from '@/utils/resetMessage'
+  
+  const emit = defineEmits(['update:visible', 'confirmUser'])
   const props = defineProps({
     visible:{
       type: Boolean,
@@ -158,22 +161,34 @@
     id: 2,
     name: '国古'
   }])
+  const loading = ref<boolean>(false)
 
   // 关闭弹窗，重置数据
   const handleClose = () => {
     emit('update:visible', false)
   }
 
-  // 完成
-  const submit = () => {
-    emit('update:visible', false)
+  // 商品保存
+  const handleGoodsSave = async (id: any, status: any) => {
+    loading.value = true
+    try {
+      const { code, msg } = await apis.goodsSaveApi(props.perForm)
+      loading.value = false
+      if (!code) {
+        myMessage({message: msg, type:'success'})
+        handleClose()
+        emit('confirmUser')
+      }
+    } catch (error: any) {
+      loading.value = false
+      throw new Error(error)
+    }
   }
 
   // 所属平台
   const searchTable = () => {
 
   }
-
   </script>
   <style scoped lang="scss">
  .product-manage{

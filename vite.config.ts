@@ -84,14 +84,9 @@ export default ({ mode }: any) => {
 		},
 		// 设置 https 代理
 		proxy: {
-			'/api': {
-				target: 'https://tsyhtest.spic-iset.com/permission',//测试环境
-				// target: 'https://tsyh.spic.com.cn',//生产环境
-				// target: 'http://10.205.54.52:9090/',
-				// target: 'http://10.205.54.222:9090', //马世超
-				// target: 'http://10.205.51.205:9090', //赵双平
-				changeOrigin: true,
-				rewrite: (path: string) => path.replace(new RegExp(`^/api`), '') 
+			'/adminapi': {
+				target: 'https://api.tuihaozhan.com', //测试环境
+				changeOrigin: true
 			}
 		}
 	},

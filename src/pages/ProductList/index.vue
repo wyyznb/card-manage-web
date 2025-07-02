@@ -29,20 +29,30 @@
       </div> -->
       <!-- 表格+分页公共组件调用 -->
       <custom-table v-loading="loading" :tableData="tableDataSource" :columns="columns" :total="total"
-        rowKey='id' :pageSizes="[20, 40, 60, 80, 100]" v-model:page="pagination.pageIndex"
-        v-model:size="pagination.pageSize" emptyText="抱歉，未查询到您搜索的信息"
+        rowKey='id' :pageSizes="[10, 20, 30, 40, 50]" v-model:page="pagination.page"
+        v-model:size="pagination.limit" emptyText="抱歉，未查询到您搜索的信息"
         @pagination="getTableDataList">
         <template v-slot:imageUrl="{ row }">
-          <img class="img-box" v-if="row.imageUrl" :src="row.imageUrl" alt="">
+          <img class="img-box" v-if="row.title_picture" :src="row.title_picture" alt="">
         </template>
         <template v-slot:status="{ row }">
-          {{ row.status ? '上架中' : '已下架' }}
+          {{ row.status === 1 ? '上架中' : '已下架' }}
         </template>
         <template v-slot:operation="{ row }">
-          <el-button @click="addProduct" type="primary" text>编辑</el-button>
-          <el-button type="primary" text>上架</el-button>
-          <el-button type="primary" text>下架</el-button>
-          <el-button type="primary" text>专属链接</el-button>
+          <el-button @click="addProduct(row)" type="primary" text>编辑</el-button>
+          <el-popconfirm
+            width="200"
+            title="确定要删除该条商品？"
+            placement="top"
+            @confirm="deleteProduct(row)"
+          >
+            <template #reference>
+              <el-button type="primary" text>删除</el-button>
+            </template>
+          </el-popconfirm>
+          <el-button type="primary" text v-if="row.status === 2" @click="handleAction(row.id, 1)">上架</el-button>
+          <el-button type="primary" text v-if="row.status === 1" @click="handleAction(row.id, 2)">下架</el-button>
+          <el-button type="primary" text @click="goExclusive(row)">专属链接</el-button>
         </template>
       </custom-table>
     </div>
@@ -50,95 +60,90 @@
     <AddProduct
       v-model:visible="showPerDialogVisible"
       :perForm="perForm"
+      @confirmUser="getTableDataList"
     />
   </div>
 </template>
 <script setup lang="ts">
-import AddProduct from './components/AddProduct.vue' 
+import AddProduct from './components/AddProduct.vue'
+import { myMessage } from '@/utils/resetMessage'
+import apis from '@/api'
 
 interface Pagination {
-  pageIndex: number
-  pageSize: number
+  page: number
+  limit: number
 }
 const pagination = reactive<Pagination>({
-  pageIndex: 1,
-  pageSize: 20
+  page: 1,
+  limit: 10
 })
 const productName = ref<any>('')
 const loading = ref<boolean>(false)
-const total = ref<number>(4)
+const total = ref<number>(0)
 const showPerDialogVisible = ref<boolean>(false)
-const perForm = ref<any>({
-  bianma: '',
-  name: '',
-  imageUrl: '',
-  age: '',
-  plat: '',
-  productTag: '',
-  productName: ''
-})
+const perForm = ref<any>({})
 
 // 列表列头设置
 const columns = [
   {
-    prop: 'bianma',
-    label: '商品编码（接口请求回来的id）',
-    width: 150
+    prop: 'code',
+    label: '商品编码',
+    width: 120
   },
   {
-    prop: 'imageUrl',
+    prop: 'title_picture',
     label: '头图',
     type: 'slot',
     slotType: "imageUrl",
-    width: 100
+    width: 120
   },
   {
-    prop: 'name',
+    prop: 'goods_name',
     label: '产品名称',
     width: 300
   },
   {
-    prop: 'detail',
+    prop: 'product_details',
     label: '详情',
+    width: 400
+  },
+  {
+    prop: 'platform',
+    label: '所属平台',
     width: 120
   },
-  
   {
-    prop: 'plat',
-    label: '所属平台',
-  },
-  {
-    prop: 'productTag',
+    prop: 'high_light',
     label: '产品亮点',
     width: 200
   },
   {
-    prop: 'productName',
+    prop: 'point',
     label: '商品备注',
-    width: 360
+    width: 260
   },
   {
-    prop: 'oldRent',
+    prop: 'yuanyuezu',
     label: '原月租',
     width: 100
   },
   {
-    prop: 'newRent',
+    prop: 'youhuiyuezu',
     label: '优惠后月租',
     width: 100
   },
   {
-    prop: 'tongyongliuliang',
+    prop: 'tongyong',
     label: '通用流量',
     width: 100
   },
   {
-    prop: 'dingxiangliuliang',
+    prop: 'dingxiang',
     label: '定向流量',
     width: 100
   },
   {
-    prop: 'tonghuashu',
+    prop: 'fenzhong',
     label: '通话分钟数',
     width: 100
   },
@@ -149,7 +154,7 @@ const columns = [
     slotType: "status"
   },
   {
-    width: 200,
+    width: 240,
     type: 'slot',
     slotType: 'options',
     label: "操作按钮",
@@ -157,53 +162,76 @@ const columns = [
   },
 ]
 
-const tableDataSource = ref<any>([{
-  bianma: '77777554545',
-  id: 1,
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx3.sinaimg.cn/large/0060M1TRly1i1bxz89gh1j30ft0kwti6.jpg',
-  name: 'N电信星花卡29元185G长期套餐',
-  detail: '详情是编辑器添加的多图片，这里无需显示',
-  plat: '号易',
-  productTag: '5G畅享速率',
-  productName: '29元185G+100分钟发货率高，政策全网最优，年龄：19-55周岁',
-  oldRent: 29,
-  newRent: 19,
-  tongyongliuliang: 155,
-  dingxiangliuliang: 30,
-  tonghuashu: 100,
-  status: 1
-},{
-  bianma: '商品编码是从接口取过来的',
-  id: 2,
-  imageUrl: 'https://image.baidu.com/search/down?thumburl=https://baidu.com&url=https://wx4.sinaimg.cn/large/0060M1TRly1i1busl224rj30em0lptms.jpg',
-  name: '头图和产品名称都是可以编辑的',
-  detail: '详情是编辑器添加的多图片，这里无需显示',
-  plat: '号易',
-  productTag: '全国高速流量',
-  productName: '29元185G+100分钟发货率高，政策全网最优，年龄：19-55周岁',
-  oldRent: 39,
-  newRent: 29,
-  tongyongliuliang: 205,
-  dingxiangliuliang: 30,
-  tonghuashu: 0,
-  status: 0
-}]);
-
+const tableDataSource = ref<any>([])
 
 // 产品名称搜索
 const onSearch = () => {
-  console.log('搜索的内容')
+  
 }
 
-// 列表接口方法
-const getTableDataList = () => {
-
+// 商品列表
+const getTableDataList = async () => {
+  loading.value = true
+  try {
+    const { code, data = {} } = await apis.goodsApi(pagination)
+    loading.value = false
+    if (!code) {
+      total.value = data?.count || 0
+      tableDataSource.value = data?.list || []
+    }
+  } catch (error: any) {
+    loading.value = false
+    throw new Error(error)
+  }
 }
 
-// 添加商品
-const addProduct = () => {
+// 商品操作[上架/下架]
+const handleAction = async (id: any, status: any) => {
+  try {
+    const { code, msg } = await apis.actionApi({
+      id,
+      status
+    })
+    if (!code) {
+      myMessage({message: msg, type: 'success'})
+      getTableDataList()
+    }
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+// 删除商品
+const deleteProduct = async (row: any) => {
+  try {
+    const { code, msg } = await apis.goodsDeleteApi({
+      id: row.id,
+    })
+    if (!code) {
+      myMessage({message: msg, type: 'success'})
+      pagination.page = 1
+      getTableDataList()
+    }
+  } catch (error: any) {
+    throw new Error(error)
+  }
+}
+
+// 编辑商品
+const addProduct = (row: any) => {
+  perForm.value = {...row}
   showPerDialogVisible.value = true
 }
+
+// 专属链接
+const goExclusive = (row: any) => {
+  const link = `${import.meta.env.VITE_APP_BASE_LINK}/detail.html?goods_id=${row.id}&from=`
+  window.open(link)
+}
+
+onMounted(() => {
+  getTableDataList()
+})
 
 </script>
 <style lang="scss" scoped>
@@ -234,8 +262,8 @@ const addProduct = () => {
     padding: 15px 0;
   }
   .img-box {
-    width: 40px;
-    height: 40px;
+    width: 80px;
+    height: 80px;
   }
 }
 </style>

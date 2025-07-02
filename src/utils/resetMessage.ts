@@ -2,7 +2,7 @@
 import { ElMessage } from 'element-plus' //引入message弹出框
  
 let messageDom:any = null
-const resetMessage = (options:any) => {
+const resetMessage = (options: any) => {
   if (messageDom) messageDom.close() // 判断弹窗是否已存在,若存在则关闭
    messageDom = ElMessage(options)
 }

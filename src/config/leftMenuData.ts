@@ -1,4 +1,4 @@
-import { MessageBox, ElementPlus, List, Operation, DocumentCopy } from '@element-plus/icons-vue'
+import { MessageBox, ElementPlus, List, Operation, DocumentCopy, Box } from '@element-plus/icons-vue'
 const leftMenuData: any = [
   {
     id: '1',
@@ -30,6 +30,12 @@ const leftMenuData: any = [
     label: '订单列表页',
     path: '/orderList',
     icon: DocumentCopy,
+  },
+  {
+    id: '6',
+    label: '号易商品',
+    path: '/numberProduct',
+    icon: Box,
   },
 ]
 

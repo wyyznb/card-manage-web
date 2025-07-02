@@ -73,7 +73,6 @@ const queryId = () => {
 
 watchEffect(() => {
   queryId()
-  console.log(isActive.value)
 })
 
 </script>

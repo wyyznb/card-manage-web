@@ -6,8 +6,6 @@
         v-loading="loading"
         :data="tableData"
         :border="border"
-        :height="tableHeight"
-        :max-height="maxHeight"
         :empty-text="emptyText"
         :row-key="getRowKeys"
         :header-cell-style="{
@@ -147,7 +145,7 @@ const props = defineProps({
   pageSizes: {
     type: Array,
     default() {
-      return [10, 20, 30, 50]
+      return [10, 20, 30, 40, 50]
     }
   },
   // 边框

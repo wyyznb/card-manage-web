@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 const routes: Array<RouteRecordRaw> = [
   {
 		path: '/',
-		redirect:'/login',
+		redirect:'/home',
 	},
   {
     path: '/home',
@@ -44,6 +44,16 @@ const routes: Array<RouteRecordRaw> = [
 			requireAuth: true
 		},
     component: () => import('@/pages/OrderList/index.vue')
+  },
+  {
+    path: '/numberProduct',
+    name: 'numberProduct',
+    meta: {
+      title: '号易商品',
+      keepAlive: false,
+			requireAuth: true
+		},
+    component: () => import('@/pages/NumberProduct/index.vue')
   },
   {
     path: '/login',
